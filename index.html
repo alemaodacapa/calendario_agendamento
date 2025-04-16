@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="styles.css" />
+  <title>Agendar Visita</title>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Agendar Visita Presencial</h1>
+    <form id="agendamentoForm">
+      <label for="data">Escolha a data:</label>
+      <input type="date" id="data" name="data" required>
+
+      <label for="hora">Escolha o horário:</label>
+      <select id="hora" name="hora" required>
+        <option value="">Selecione o horário</option>
+        <!-- Opções adicionadas via JS -->
+      </select>
+
+      <label for="nome">Seu nome:</label>
+      <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo">
+
+      <label for="telefone">Telefone:</label>
+      <input type="text" id="telefone" name="telefone" required placeholder="(DDD) 99999-9999">
+
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" name="endereco" required placeholder="Rua, número, bairro, cidade">
+
+      <label for="motivo">Motivo do agendamento:</label>
+      <textarea id="motivo" name="motivo" maxlength="2000" required placeholder="Explique o motivo da visita..."></textarea>
+
+      <button type="submit">Enviar via WhatsApp</button>
+    </form>
+  </div>
+
+  <script>
+    // Adiciona opções de horário das 09h às 17h
+    document.addEventListener("DOMContentLoaded", () => {
+      const selectHora = document.getElementById("hora");
+      for(let h = 9; h <= 17; h++) {
+        let horaTexto = h < 10 ? `0${h}` : `${h}`;
+        let opt = document.createElement("option");
+        opt.value = `${horaTexto}:00`;
+        opt.textContent = `${horaTexto}:00`;
+        selectHora.appendChild(opt);
+      }
+    });
+
+    // Envia mensagem para WhatsApp com os dados do formulário
+    document.getElementById('agendamentoForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const data = document.getElementById('data').value;
+      const hora = document.getElementById('hora').value;
+      const nome = document.getElementById('nome').value;
+      const telefone = document.getElementById('telefone').value;
+      const endereco = document.getElementById('endereco').value;
+      const motivo = document.getElementById('motivo').value;
+
+      const msg = `*Agendamento de Visita*%0A%0A*Nome:* ${nome}%0A*Telefone:* ${telefone}%0A*Data:* ${data}%0A*Horário:* ${hora}%0A*Endereço:* ${endereco}%0A*Motivo:* ${encodeURIComponent(motivo)}`;
+      const numero = "5511948793902";
+      const url = `https://wa.me/${numero}?text=${msg}`;
+
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>
